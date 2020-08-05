@@ -1,0 +1,51 @@
+server:
+  servlet:
+    context-path: /api
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          time_zone: "GMT-03:00"
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+logging:
+  file:
+    max-size: 1MB
+    path: /var/logs/scheduler/
+  level:
+    root: INFO
+    web: INFO
+    sql: INFO
+
+---
+
+spring:
+  profiles: test
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        jdbc:
+          time_zone: "GMT-03:00"
+logging:
+  file:
+    max-size: 1MB
+    path: logs/scheduler/
+  level:
+    root: DEBUG
+    web: DEBUG
+    sql: DEBUG
+debug: true
