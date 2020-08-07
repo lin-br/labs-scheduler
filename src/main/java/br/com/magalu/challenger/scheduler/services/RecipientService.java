@@ -1,13 +1,17 @@
 package br.com.magalu.challenger.scheduler.services;
 
+
 import br.com.magalu.challenger.scheduler.domains.entities.Recipient;
 import br.com.magalu.challenger.scheduler.domains.repositories.RecipientRepository;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional(propagation = Propagation.MANDATORY)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 class RecipientService {
   private final RecipientRepository recipientRepository;
