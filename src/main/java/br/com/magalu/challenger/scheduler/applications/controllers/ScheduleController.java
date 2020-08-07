@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +42,15 @@ class ScheduleController {
   public ResponseEntity<ScheduleDto> getScheduleById(@PathVariable final String id) {
     return this.service
         .getScheduleById(id)
-        .map(this::getResponseOfFind)
+        .map(this::getOkResponse)
+        .orElseGet(this::getNotFoundResponse);
+  }
+
+  @DeleteMapping(value = PATH_GET_SCHEDULE_BY_ID)
+  public ResponseEntity<ScheduleDto> deleteScheduleById(@PathVariable final String id) {
+    return this.service
+        .deleteScheduleById(id)
+        .map(this::getOkResponse)
         .orElseGet(this::getNotFoundResponse);
   }
 
@@ -49,7 +58,7 @@ class ScheduleController {
     return ResponseEntity.notFound().build();
   }
 
-  private ResponseEntity<ScheduleDto> getResponseOfFind(ScheduleDto dto) {
+  private ResponseEntity<ScheduleDto> getOkResponse(ScheduleDto dto) {
     return ResponseEntity.ok(dto);
   }
 

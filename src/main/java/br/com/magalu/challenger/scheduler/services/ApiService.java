@@ -8,4 +8,6 @@ public interface ApiService<T> {
   Optional<URI> add(T dto);
 
   Optional<T> getScheduleById(String id);
+
+  Optional<T> deleteScheduleById(String id);
 }
