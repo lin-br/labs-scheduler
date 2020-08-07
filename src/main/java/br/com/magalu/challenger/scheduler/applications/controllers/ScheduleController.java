@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 class ScheduleController {
 
   static final String PATH = "/schedules";
+  static final String PATH_GET_SCHEDULE_BY_ID = "/{id}";
+
   private final ApiService<ScheduleDto> service;
 
   @PostMapping(
@@ -31,6 +35,22 @@ class ScheduleController {
         .add(payload)
         .map(this::getResponseOfStatusCreated)
         .orElseGet(this::getResponseOfStatusUnprocessableEntity);
+  }
+
+  @GetMapping(value = PATH_GET_SCHEDULE_BY_ID, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ScheduleDto> getScheduleById(@PathVariable final String id) {
+    return this.service
+        .getScheduleById(id)
+        .map(this::getResponseOfFind)
+        .orElseGet(this::getNotFoundResponse);
+  }
+
+  private ResponseEntity<ScheduleDto> getNotFoundResponse() {
+    return ResponseEntity.notFound().build();
+  }
+
+  private ResponseEntity<ScheduleDto> getResponseOfFind(ScheduleDto dto) {
+    return ResponseEntity.ok(dto);
   }
 
   private ResponseEntity<Serializable> getResponseOfStatusCreated(final URI uri) {

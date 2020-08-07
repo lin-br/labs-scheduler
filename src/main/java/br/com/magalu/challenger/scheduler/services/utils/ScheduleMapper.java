@@ -26,4 +26,14 @@ public final class ScheduleMapper {
       throw new ScheduleTypeException("O tipo do envio está inválido");
     }
   }
+
+  public static ScheduleDto fromEntityToDto(Schedule schedule) {
+    return ScheduleDto.builder()
+        .date(schedule.getSendDate())
+        .message(schedule.getMessage())
+        .recipient(schedule.getRecipient().getRecipient())
+        .type(schedule.getSendType().name())
+        .status(schedule.getScheduleStatus().name())
+        .build();
+  }
 }

@@ -19,9 +19,14 @@ public class ScheduleDto {
   @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC-3")
   private Calendar date;
 
-  @NotNull private String recipient;
+  @NotNull
+  private String recipient;
 
-  @NotNull private String message;
+  @NotNull
+  private String message;
 
-  @NotNull private String type;
+  @NotNull
+  private String type;
+
+  private String status;
 }
