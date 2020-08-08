@@ -1,7 +1,13 @@
+application:
+  name: @project.name@
+  description: @project.description@
+  version: @project.version@
 server:
   servlet:
     context-path: /api
 spring:
+  profiles:
+    active: @project.profile@
   jackson:
     time-zone: "GMT-03"
   jpa:
