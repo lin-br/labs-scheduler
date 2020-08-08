@@ -4,6 +4,7 @@ import br.com.magalu.challenger.scheduler.applications.dtos.ScheduleDto;
 import br.com.magalu.challenger.scheduler.services.ApiService;
 import java.io.Serializable;
 import java.net.URI;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping(ScheduleController.PATH)
@@ -34,6 +36,7 @@ class ScheduleController {
       @Validated @RequestBody final ScheduleDto payload) {
     return this.service
         .add(payload)
+        .map(this::getUriToStatusCode200)
         .map(this::getResponseOfStatusCreated)
         .orElseGet(this::getResponseOfStatusUnprocessableEntity);
   }
@@ -68,5 +71,12 @@ class ScheduleController {
 
   private ResponseEntity<Serializable> getResponseOfStatusUnprocessableEntity() {
     return ResponseEntity.unprocessableEntity().build();
+  }
+
+  private URI getUriToStatusCode200(final UUID id) {
+    return ServletUriComponentsBuilder.fromCurrentRequest()
+        .path("/{id}")
+        .buildAndExpand(id)
+        .toUri();
   }
 }
