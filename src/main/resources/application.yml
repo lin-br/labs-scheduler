@@ -2,6 +2,18 @@ server:
   servlet:
     context-path: /api
 spring:
+  profiles:
+    active: @project.profile@
+logging:
+  level:
+    root: INFO
+    web: INFO
+    sql: INFO
+
+---
+
+spring:
+  profiles: develop
   jpa:
     hibernate:
       ddl-auto: create
@@ -18,13 +30,11 @@ spring:
     username: postgres
     password: postgres
 logging:
-  file:
-    max-size: 1MB
-    path: /var/logs/scheduler/
   level:
-    root: INFO
-    web: INFO
-    sql: INFO
+    root: DEBUG
+    web: DEBUG
+    sql: DEBUG
+debug: true
 
 ---
 
@@ -41,9 +51,6 @@ spring:
         jdbc:
           time_zone: "GMT-03:00"
 logging:
-  file:
-    max-size: 1MB
-    path: logs/scheduler/
   level:
     root: DEBUG
     web: DEBUG
