@@ -10,6 +10,7 @@ Um projeto de agendamento para envio de carga de comunicação, desenvolvido em 
  - [`jUnit5 e Mockito`](https://junit.org/junit5/) - Framework para execução de testes.
  - [`H2 Database Engine`](https://mvnrepository.com/artifact/com.h2database/h2) - 
  Banco de dados executado em memória, utilizado nos testes.
+ - [Swagger](https://swagger.io/) - Framework para documentação da API.
 
 ## Dependências
 É necessário ter instalado na sua máquina os seguintes programas:
@@ -55,6 +56,8 @@ São:
     GET http://localhost:8080/api/schedules/{id}
 - Para exclusão de agendamento:
     DELETE http://localhost:8080/api/schedules/{id}
+
+É possível consulta-los pelo endpoint da documentação via [Swagger](http://localhost:8080/api/swagger-ui.html).
 
 ## Consumindo API
 
