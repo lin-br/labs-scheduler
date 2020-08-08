@@ -25,6 +25,14 @@
     <finalName>scheduler-app</finalName>
     <plugins>
       <plugin>
+        <artifactId>dockerfile-maven-plugin</artifactId>
+        <configuration>
+          <repository>linbr/${project.artifactId}</repository>
+        </configuration>
+        <groupId>com.spotify</groupId>
+        <version>1.4.9</version>
+      </plugin>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>

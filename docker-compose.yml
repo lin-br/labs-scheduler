@@ -1,0 +1,39 @@
+version: '3'
+networks:
+  scheduler-network:
+    driver: bridge
+services:
+  postgredb:
+    image: postgres:alpine
+    container_name: postgres-scheduler-app
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    networks:
+      - scheduler-network
+  schedulerapp:
+    image: linbr/scheduler
+    container_name: scheduler-app
+    volumes:
+      - ./waiting.sh:/root/waiting.sh
+    restart: always
+    environment:
+      JAVA_OPTS: -Xmx2048m
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_DATABASE_DRIVERCLASSNAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgredb:5432/postgres
+      SPRING_JPA_DATABASE: POSTGRESQL
+      SPRING_JPA_HIBERNATE_DDLAUTO: update
+      SPRING_JPA_PROPERTIES_JDBC_TIMEZONE: "GMT-03:00"
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgredb
+    networks:
+      - scheduler-network
