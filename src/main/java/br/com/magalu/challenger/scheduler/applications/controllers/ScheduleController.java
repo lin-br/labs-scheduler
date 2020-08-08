@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping(ScheduleController.PATH)
@@ -33,10 +33,11 @@ class ScheduleController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Serializable> addScheduler(
-      @Validated @RequestBody final ScheduleDto payload) {
+      @Validated @RequestBody final ScheduleDto payload,
+      UriComponentsBuilder uriComponentsBuilder) {
     return this.service
         .add(payload)
-        .map(this::getUriToStatusCode200)
+        .map(uuid -> this.getUriToStatusCode200(uriComponentsBuilder, uuid))
         .map(this::getResponseOfStatusCreated)
         .orElseGet(this::getResponseOfStatusUnprocessableEntity);
   }
@@ -73,9 +74,9 @@ class ScheduleController {
     return ResponseEntity.unprocessableEntity().build();
   }
 
-  private URI getUriToStatusCode200(final UUID id) {
-    return ServletUriComponentsBuilder.fromCurrentRequest()
-        .path("/{id}")
+  private URI getUriToStatusCode200(UriComponentsBuilder uriComponentsBuilder, final UUID id) {
+    return uriComponentsBuilder
+        .path(PATH.concat(PATH_GET_SCHEDULE_BY_ID))
         .buildAndExpand(id)
         .toUri();
   }
