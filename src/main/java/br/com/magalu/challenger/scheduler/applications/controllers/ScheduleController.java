@@ -37,7 +37,7 @@ class ScheduleController {
   public ResponseEntity<Serializable> addSchedule(
       @Validated @RequestBody final ScheduleDto payload,
       UriComponentsBuilder uriComponentsBuilder) {
-    if (TypeValidationsFactory.of(payload.getType()).validate(payload.getMessage())) {
+    if (TypeValidationsFactory.of(payload.getType()).validate(payload.getRecipient())) {
       return this.service
           .add(payload)
           .map(uuid -> this.getUriToStatusCode200(uriComponentsBuilder, uuid))
