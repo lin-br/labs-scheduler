@@ -124,6 +124,12 @@
       <groupId>io.springfox</groupId>
       <version>2.9.2</version>
     </dependency>
+
+    <dependency>
+      <artifactId>commons-validator</artifactId>
+      <groupId>commons-validator</groupId>
+      <version>1.7</version>
+    </dependency>
   </dependencies>
 
   <profiles>
