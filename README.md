@@ -70,13 +70,18 @@ Para testes e usos em casos reais, utilizo e recomendo fortemente o POSTMAN.
 
 URL: **http://localhost:8080/api/schedules**
 
+* Observação: Foi adicionado uma validação entre o destinatário e o tipo enviado:
+    * Para `EMAIL`: o campo destinatário precisa possuir um e-mail válido.
+    * Para `WHATSAPP` e `SMS`: o campo destinatário precisa possuir somente números e mais
+    do que 9 caracteres. 
+
 Vai cadastrar um `agendamento` com a data de envio em `07 de Dezembro de 2020 às 17:40 horas`,
-para o destinatário `wesley`, com a mensagem `teste 1` e o tipo de envio para `email`.
+para o destinatário `abc@email.com`, com a mensagem `teste 1` e o tipo de envio para `email`.
 ```bash
 curl -X POST \
   'http://localhost:8080/api/schedules' \
   -H 'Content-Type: application/json' \
-  -d '{"date":"2020-12-07 17:40:00","recipient":"wesley","message":"teste 1","type":"email"}'
+  -d '{"date":"2020-12-07 17:40:00","recipient":"abc@email.com","message":"teste 1","type":"EMAIL"}'
 ```
 > Quando realizamos uma requisição POST para uma API Restful, o método retorna um header chamado
 `Location` que possui a URL de consulta para aquela nova entidade que foi criada.
@@ -85,7 +90,7 @@ Para pegar o header `Location` envie o seguinte comando:
 curl -i -X POST \
   'http://localhost:8080/api/schedules' \
   -H 'Content-Type: application/json' \
-  -d '{"date":"2020-12-07 17:40:00","recipient":"wesley","message":"teste 1","type":"email"}'
+  -d '{"date":"2020-12-07 17:40:00","recipient":"abc@email.com","message":"teste 1","type":"EMAIL"}'
 ```
 Exemplo de resposta:
 ```text
