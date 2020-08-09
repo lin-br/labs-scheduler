@@ -1,6 +1,8 @@
 package br.com.magalu.challenger.scheduler.applications.controllers;
 
 import br.com.magalu.challenger.scheduler.applications.dtos.ScheduleDto;
+import br.com.magalu.challenger.scheduler.applications.dtos.errors.MessageBodyResponseDto;
+import br.com.magalu.challenger.scheduler.applications.validations.TypeValidationsFactory;
 import br.com.magalu.challenger.scheduler.services.ApiService;
 import java.io.Serializable;
 import java.net.URI;
@@ -35,11 +37,26 @@ class ScheduleController {
   public ResponseEntity<Serializable> addSchedule(
       @Validated @RequestBody final ScheduleDto payload,
       UriComponentsBuilder uriComponentsBuilder) {
-    return this.service
-        .add(payload)
-        .map(uuid -> this.getUriToStatusCode200(uriComponentsBuilder, uuid))
-        .map(this::getResponseOfStatusCreated)
-        .orElseGet(this::getResponseOfStatusUnprocessableEntity);
+    if (TypeValidationsFactory.of(payload.getType()).validate(payload.getMessage())) {
+      return this.service
+          .add(payload)
+          .map(uuid -> this.getUriToStatusCode200(uriComponentsBuilder, uuid))
+          .map(this::getResponseOfStatusCreated)
+          .orElseGet(this::getResponseOfStatusUnprocessableEntity);
+    } else {
+      return this.getResponseBadRequest(payload);
+    }
+  }
+
+  private ResponseEntity<Serializable> getResponseBadRequest(ScheduleDto payload) {
+    return ResponseEntity.badRequest()
+        .body(
+            MessageBodyResponseDto.builder()
+                .message(
+                    String.format(
+                        "Encontrado incompatibilidade entre o tipo de envio [%s] e o destinatário [%s].",
+                        payload.getType(), payload.getRecipient()))
+                .build());
   }
 
   @GetMapping(value = PATH_GET_SCHEDULE_BY_ID, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,6 +1,7 @@
 package br.com.magalu.challenger.scheduler.services.utils;
 
 import br.com.magalu.challenger.scheduler.applications.dtos.ScheduleDto;
+import br.com.magalu.challenger.scheduler.applications.dtos.SendTypeDto;
 import br.com.magalu.challenger.scheduler.domains.entities.Recipient;
 import br.com.magalu.challenger.scheduler.domains.entities.Schedule;
 import br.com.magalu.challenger.scheduler.domains.entities.ScheduleStatus;
@@ -13,7 +14,7 @@ public final class ScheduleMapper {
     return Schedule.builder()
         .sendDate(dto.getDate())
         .recipient(recipient)
-        .sendType(getSendType(dto.getType()))
+        .sendType(getSendType(dto.getType().name()))
         .message(dto.getMessage())
         .scheduleStatus(ScheduleStatus.SCHEDULED)
         .build();
@@ -32,7 +33,7 @@ public final class ScheduleMapper {
         .date(schedule.getSendDate())
         .message(schedule.getMessage())
         .recipient(schedule.getRecipient().getRecipient())
-        .type(schedule.getSendType().name())
+        .type(SendTypeDto.valueOf(schedule.getSendType().name()))
         .status(schedule.getScheduleStatus().name())
         .build();
   }

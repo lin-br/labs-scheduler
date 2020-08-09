@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import br.com.magalu.challenger.scheduler.applications.dtos.ScheduleDto;
+import br.com.magalu.challenger.scheduler.applications.dtos.SendTypeDto;
 import br.com.magalu.challenger.scheduler.domains.entities.Recipient;
 import br.com.magalu.challenger.scheduler.domains.entities.Schedule;
 import br.com.magalu.challenger.scheduler.domains.entities.ScheduleStatus;
@@ -48,7 +49,7 @@ public class ScheduleServiceTests {
 
     final UUID uuid =
         this.service
-            .add(ScheduleDto.builder().recipient(recipientString).type("email").build())
+            .add(ScheduleDto.builder().recipient(recipientString).type(SendTypeDto.EMAIL).build())
             .get();
 
     assertNotNull(uuid);
@@ -61,11 +62,11 @@ public class ScheduleServiceTests {
     when(this.recipientService.addRecipient(recipientString))
         .thenReturn(Optional.of(Recipient.builder().recipient(recipientString).build()));
 
-    assertThrows(
-        ScheduleTypeException.class,
-        () ->
-            this.service.add(
-                ScheduleDto.builder().recipient(recipientString).type("not exists").build()));
+    final ScheduleDto dto = ScheduleDto.builder().recipient(recipientString).type(null).build();
+    ScheduleDto spy = spy(dto);
+    when(spy.getType()).thenReturn(SendTypeDto.IT_NOT_EXIST);
+
+    assertThrows(ScheduleTypeException.class, () -> this.service.add(spy));
   }
 
   @Test
@@ -85,7 +86,7 @@ public class ScheduleServiceTests {
     verify(this.repository, times(1)).findById(this.id);
     assertNotNull(dto);
     assertEquals(this.recipientString, dto.getRecipient());
-    assertEquals(SendType.WHATSAPP.name(), dto.getType());
+    assertEquals(SendType.WHATSAPP.name(), dto.getType().name());
     assertEquals(ScheduleStatus.SCHEDULED.name(), dto.getStatus());
   }
 
@@ -113,7 +114,7 @@ public class ScheduleServiceTests {
     assertEquals(ScheduleStatus.EXCLUDED, captor.getValue().getScheduleStatus());
     assertNotNull(dto);
     assertEquals(this.recipientString, dto.getRecipient());
-    assertEquals(SendType.WHATSAPP.name(), dto.getType());
+    assertEquals(SendType.WHATSAPP.name(), dto.getType().name());
     assertEquals(ScheduleStatus.EXCLUDED.name(), dto.getStatus());
   }
 

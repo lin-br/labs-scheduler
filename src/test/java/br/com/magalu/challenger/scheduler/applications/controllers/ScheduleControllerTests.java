@@ -6,9 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import br.com.magalu.challenger.scheduler.applications.dtos.ScheduleDto;
+import br.com.magalu.challenger.scheduler.applications.dtos.SendTypeDto;
 import br.com.magalu.challenger.scheduler.domains.entities.ScheduleStatus;
 import br.com.magalu.challenger.scheduler.services.ApiService;
 import java.io.Serializable;
@@ -47,7 +49,7 @@ public class ScheduleControllerTests {
 
     this.dto =
         ScheduleDto.builder()
-            .type("push")
+            .type(SendTypeDto.PUSH)
             .recipient("test")
             .message("it is a test")
             .date(Calendar.getInstance())
@@ -125,5 +127,22 @@ public class ScheduleControllerTests {
 
     verify(this.service, times(1)).deleteScheduleById(this.id.toString());
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+  }
+
+  @Test
+  void shouldGetBadRequestIfTheRecipientNotMatchWithSendType() {
+    ScheduleDto dto =
+        ScheduleDto.builder()
+            .type(SendTypeDto.EMAIL)
+            .recipient("it is not an email")
+            .message("it is a test")
+            .date(Calendar.getInstance())
+            .build();
+
+    final ResponseEntity<Serializable> response =
+        this.controller.addSchedule(dto, this.uriComponentsBuilder);
+
+    verifyNoInteractions(this.service);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
   }
 }

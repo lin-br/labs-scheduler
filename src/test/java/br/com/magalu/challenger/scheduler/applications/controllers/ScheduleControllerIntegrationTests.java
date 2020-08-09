@@ -1,6 +1,7 @@
 package br.com.magalu.challenger.scheduler.applications.controllers;
 
 import br.com.magalu.challenger.scheduler.applications.dtos.ScheduleDto;
+import br.com.magalu.challenger.scheduler.applications.dtos.SendTypeDto;
 import br.com.magalu.challenger.scheduler.applications.dtos.errors.MessageBodyResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Calendar;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class ScheduleControllerIntegrationTests {
 
   static final String PROFILE_TEST = "test";
+  private final ResultMatcher statusResultMatcher = MockMvcResultMatchers.status().isBadRequest();
   @Autowired
   private ObjectMapper mapper;
   @Autowired
@@ -31,7 +33,7 @@ public class ScheduleControllerIntegrationTests {
   void shoulGetResponseEntityWithScheduleTypeErrorMessage() throws Exception {
     final ScheduleDto dto =
         ScheduleDto.builder()
-            .type("it isn't exists")
+            .type(null)
             .recipient("test")
             .message("it is a test")
             .date(Calendar.getInstance())
@@ -45,10 +47,34 @@ public class ScheduleControllerIntegrationTests {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(this.mapper.writeValueAsString(dto));
 
-    final ResultMatcher statusResultMatcher = MockMvcResultMatchers.status().isBadRequest();
     final ResultMatcher bodyResultMatcher =
         MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(bodyDto));
 
-    this.mockMvc.perform(request).andExpect(statusResultMatcher).andExpect(bodyResultMatcher);
+    this.mockMvc.perform(request).andExpect(this.statusResultMatcher).andExpect(bodyResultMatcher);
+  }
+
+  @Test
+  void shoulGetResponseEntityWithoutTheRecipient() throws Exception {
+    final ScheduleDto dto =
+        ScheduleDto.builder()
+            .type(SendTypeDto.PUSH)
+            .message("it is a test")
+            .date(Calendar.getInstance())
+            .build();
+
+    final MessageBodyResponseDto bodyDto =
+        MessageBodyResponseDto.builder()
+            .message("Encontrado erro [must not be null] no campo: recipient")
+            .build();
+
+    final MockHttpServletRequestBuilder request =
+        MockMvcRequestBuilders.post(ScheduleController.PATH)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(this.mapper.writeValueAsString(dto));
+
+    final ResultMatcher bodyResultMatcher =
+        MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(bodyDto));
+
+    this.mockMvc.perform(request).andExpect(this.statusResultMatcher).andExpect(bodyResultMatcher);
   }
 }

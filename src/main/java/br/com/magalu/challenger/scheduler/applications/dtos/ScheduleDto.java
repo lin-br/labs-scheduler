@@ -26,7 +26,7 @@ public class ScheduleDto {
   private String message;
 
   @NotNull
-  private String type;
+  private SendTypeDto type;
 
   private String status;
 }
