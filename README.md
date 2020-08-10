@@ -11,6 +11,8 @@ Um projeto de agendamento para envio de carga de comunicação, desenvolvido em 
  - [`H2 Database Engine`](https://mvnrepository.com/artifact/com.h2database/h2) - 
  Banco de dados executado em memória, utilizado nos testes.
  - [Swagger](https://swagger.io/) - Framework para documentação da API.
+ - [`RabbitMQ`](https://www.rabbitmq.com) - Broker de mensageria.
+ - [`Google Protocol Buffer`](https://developers.google.com/protocol-buffers) - Framework para troca de mensagens entre serviços.
 
 ## Dependências
 É necessário ter instalado na sua máquina os seguintes programas:
@@ -33,20 +35,18 @@ cd ./labs-scheduler/
 ```
 E execute o seguinte comando para realizar a instalação das dependências do aplicativo:
 ```bash
-mvn clean package
-```
-Agora execute o seguinte comando para realizar a construção do aplicativo:
-> Ps: Tenha certeza de que na sua máquina o Docker está ligado. 
-```bash
-mvn dockerfile:build
+mvn clean install
 ```
 Por último, mas não menos importante, vamos iniciar o Schedule API:
-> Ps: Caso ocorra algum erro nesse momento, verifique se possui algum aplicativo na sua máquina
-que esteja a utilizar a porta `8080` ou `5432`. Caso não possua conhecimento para tal
-procedimento, tente reiniciar a máquina e então voltar a executar o Schedule API.
+> Observações:
+> -Tenha certeza de que na sua máquina o Docker está ligado.
+> -Caso ocorra algum erro nesse momento, verifique se possui algum aplicativo na sua máquina
+ que esteja a utilizar a porta `8080` ou `5432`. Caso não possua conhecimento para tal
+ procedimento, tente reiniciar a máquina e então voltar a executar o Schedule API. 
 ```bash
-docker-compose up
+docker-compose up -d
 ```
+> Ps: Vai demorar um pouco para subir devido ao servidor do Broker de Messageria (RabbitMQ)
 
 ## Endpoints da API
 São:
