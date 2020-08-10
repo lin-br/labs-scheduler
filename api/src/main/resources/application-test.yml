@@ -1,0 +1,10 @@
+spring:
+  profiles: test
+  main:
+    allow-bean-definition-overriding: true
+logging:
+  level:
+    root: DEBUG
+    web: DEBUG
+    sql: DEBUG
+debug: true
