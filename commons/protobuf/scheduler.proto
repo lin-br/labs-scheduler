@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_package = "br.com.magalu.challenger.commons";
+
+import "google/protobuf/timestamp.proto";
+
+message Schedule {
+
+  enum SendType {
+    UNKNOWN = 0;
+    EMAIL = 1;
+    SMS = 2;
+    PUSH = 3;
+    WHATSAPP = 4;
+  }
+
+  string message = 1;
+  string recipient = 2;
+  google.protobuf.Timestamp sendDate = 4;
+  SendType type = 5;
+}
+
+message Request {
+  Schedule payload = 1;
+  string id = 2;
+}
+
+message Response {
+  Schedule schedule = 1;
+  string status = 2;
+  string id = 3;
+}
