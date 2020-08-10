@@ -1,6 +1,14 @@
 # Labs Scheduler API
 Um projeto de agendamento para envio de carga de comunicação, desenvolvido em Java.
 
+# Versões:
+* 1.0.0 -> Desenvolvido em cima de um monolito.
+* 2.0.0 -> Desenvolvido em microserviços, mas eu não subi na branch Master para não sobrescrever
+o que foi solicitado, entretanto, caso queira validar o desenvolvimento do mesmo (clique aqui)[https://github.com/lin-br/labs-scheduler/tree/feature/internal-integration].
+Nesse branch eu utilizo RabbitMQ e Google Protocol Buffer para realizar a comunicação entre os
+serviços internos, dessa maneira a API fica disponível para usuários finais e caso o meu coleguinha
+queira utilizar o mesmo serviço, ele pode realizar a comunicação internamente.
+
 ## Tecnologias
 
  - [`Spring boot`](https://spring.io) - Framework de desenvolvimento Java.
