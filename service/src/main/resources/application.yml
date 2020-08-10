@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: @project.profile@
+  jackson:
+    time-zone: "GMT-03"
+  rabbitmq:
+    host: rabbitmq
+    username: guest
+    password: guest
+logging:
+  level:
+    root: INFO
+    web: INFO
+    sql: INFO
