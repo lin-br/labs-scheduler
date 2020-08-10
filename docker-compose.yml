@@ -3,6 +3,22 @@ networks:
   scheduler-network:
     driver: bridge
 services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "rabbitmq", "5672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    expose:
+      - 15672
+      - 5672
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      - scheduler-network
   postgredb:
     image: postgres:alpine
     container_name: postgres-scheduler-app
@@ -16,11 +32,15 @@ services:
     networks:
       - scheduler-network
   schedulerapp:
-    image: linbr/scheduler
+    image: linbr/scheduler-app
+    build: ./service/
     container_name: scheduler-app
-    volumes:
-      - ./waiting.sh:/root/waiting.sh
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     environment:
       JAVA_OPTS: -Xmx2048m
       SPRING_PROFILES_ACTIVE: default
@@ -31,9 +51,28 @@ services:
       SPRING_JPA_DATABASE: POSTGRESQL
       SPRING_JPA_HIBERNATE_DDLAUTO: update
       SPRING_JPA_PROPERTIES_JDBC_TIMEZONE: "GMT-03:00"
+      SPRING_RABBITMQ_ADDRESSES: amqp://guest:guest@rabbitmq:5672/
+    links:
+      - rabbitmq:rabbitmq
+    depends_on:
+      - postgredb
+      - rabbitmq
+    networks:
+      - scheduler-network
+  api:
+    image: linbr/scheduler-api
+    build: ./api/
+    container_name: scheduler-api
+    restart: always
+    environment:
+      JAVA_OPTS: -Xmx2048m
+      SPRING_RABBITMQ_ADDRESSES: amqp://guest:guest@rabbitmq:5672/
+    links:
+      - rabbitmq:rabbitmq
     ports:
       - 8080:8080
     depends_on:
       - postgredb
+      - rabbitmq
     networks:
       - scheduler-network
