@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+repositories {
+    jcenter()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation 'commons-validator:commons-validator:1.7'
+    runtimeOnly 'com.h2database:h2:1.4.200'
+    runtimeOnly 'org.postgresql:postgresql:42.2.14'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+jar {
+    archivesBaseName = 'app'
+}
+
+group = 'br.com.magalu.challenger'
+version = '1.0.0'
+description = 'scheduler'
+java.sourceCompatibility = JavaVersion.VERSION_13
+
+if (!hasProperty('buildProfile')) ext.buildProfile = 'default'
+
+processResources {
+    expand(project.properties)
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+wrapper {
+    gradleVersion = '6.8.1'
+}

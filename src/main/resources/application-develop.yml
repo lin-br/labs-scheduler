@@ -1,5 +1,4 @@
 spring:
-  profiles: develop
   jpa:
     hibernate:
       ddl-auto: create

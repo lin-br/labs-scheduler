@@ -1,13 +1,13 @@
 application:
-  name: @project.name@
-  description: @project.description@
-  version: @project.version@
+  name: "${name}"
+  description: "${description}"
+  version: "${version}"
 server:
   servlet:
     context-path: /api
 spring:
   profiles:
-    active: @project.profile@
+    active: "${buildProfile}"
   jackson:
     time-zone: "GMT-03"
   jpa:

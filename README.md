@@ -22,11 +22,11 @@ queira utilizar o mesmo serviço, ele pode realizar a comunicação internamente
 
 ## Dependências
 É necessário ter instalado na sua máquina os seguintes programas:
-* O Gerenciador de dependências do Java, [Maven](https://maven.apache.org/),
-caso ele não esteja instalado, siga o tutorial do próprio site: 
-[Maven install](https://maven.apache.org/install.html).
-* Aplicação de containers, estamos utilizando o [Docker](https://www.docker.com), caso ele não
-esteja instalado, siga o tutorial do próprio site: [Get Docker](https://docs.docker.com/get-docker/).
+* O Gerenciador de dependências do Java, [Gradle](https://gradle.org/), caso ele não esteja
+  instalado, siga o tutorial do próprio site:
+  [Gradle install](https://gradle.org/install/).
+* Aplicação de containers, neste projeto é o [Docker](https://www.docker.com), caso ele não esteja
+  instalado, siga o tutorial do próprio site: [Get Docker](https://docs.docker.com/get-docker/).
 
 ## Instalação
 
@@ -41,12 +41,12 @@ cd ./labs-scheduler/
 ```
 E execute o seguinte comando para realizar a instalação das dependências do aplicativo:
 ```bash
-mvn clean package
+./gradlew clean build
 ```
 Agora execute o seguinte comando para realizar a construção do aplicativo:
 > Ps: Tenha certeza de que na sua máquina o Docker está ligado. 
 ```bash
-mvn dockerfile:build
+docker build -t linbr/scheduler .
 ```
 Por último, mas não menos importante, vamos iniciar o Schedule API:
 > Ps: Caso ocorra algum erro nesse momento, verifique se possui algum aplicativo na sua máquina

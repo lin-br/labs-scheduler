@@ -2,7 +2,6 @@ package br.com.magalu.challenger.scheduler.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -18,7 +17,6 @@ import br.com.magalu.challenger.scheduler.domains.entities.Schedule;
 import br.com.magalu.challenger.scheduler.domains.entities.ScheduleStatus;
 import br.com.magalu.challenger.scheduler.domains.entities.SendType;
 import br.com.magalu.challenger.scheduler.domains.repositories.ScheduleRepository;
-import br.com.magalu.challenger.scheduler.services.exceptions.ScheduleTypeException;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,23 +48,11 @@ public class ScheduleServiceTests {
     final UUID uuid =
         this.service
             .add(ScheduleDto.builder().recipient(recipientString).type(SendTypeDto.EMAIL).build())
-            .get();
+            .orElseThrow();
 
     assertNotNull(uuid);
     assertEquals(uuid, id);
     verify(this.repository, Mockito.times(1)).save(any(Schedule.class));
-  }
-
-  @Test
-  void shouldThrowExceptionIfSendTypeNotExists() {
-    when(this.recipientService.addRecipient(recipientString))
-        .thenReturn(Optional.of(Recipient.builder().recipient(recipientString).build()));
-
-    final ScheduleDto dto = ScheduleDto.builder().recipient(recipientString).type(null).build();
-    ScheduleDto spy = spy(dto);
-    when(spy.getType()).thenReturn(SendTypeDto.IT_NOT_EXIST);
-
-    assertThrows(ScheduleTypeException.class, () -> this.service.add(spy));
   }
 
   @Test
@@ -81,7 +67,7 @@ public class ScheduleServiceTests {
                     .scheduleStatus(ScheduleStatus.SCHEDULED)
                     .build()));
 
-    final ScheduleDto dto = this.service.getScheduleById(this.id.toString()).get();
+    final ScheduleDto dto = this.service.getScheduleById(this.id.toString()).orElseThrow();
 
     verify(this.repository, times(1)).findById(this.id);
     assertNotNull(dto);
@@ -105,7 +91,7 @@ public class ScheduleServiceTests {
 
     when(this.repository.save(entity)).thenReturn(entity);
 
-    final ScheduleDto dto = this.service.deleteScheduleById(this.id.toString()).get();
+    final ScheduleDto dto = this.service.deleteScheduleById(this.id.toString()).orElseThrow();
 
     final ArgumentCaptor<Schedule> captor = ArgumentCaptor.forClass(Schedule.class);
 
@@ -133,7 +119,7 @@ public class ScheduleServiceTests {
 
     when(this.repository.save(entity)).thenReturn(entity);
 
-    this.service.deleteScheduleById(this.id.toString()).get();
+    this.service.deleteScheduleById(this.id.toString()).orElseThrow();
 
     verify(this.repository, never()).delete(any(Schedule.class));
     verify(this.repository, never()).deleteById(any(UUID.class));

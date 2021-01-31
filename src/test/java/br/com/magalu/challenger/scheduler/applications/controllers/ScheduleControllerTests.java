@@ -37,7 +37,7 @@ public class ScheduleControllerTests {
 
   @BeforeEach
   void setup() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     this.controller = new ScheduleController(this.service);
 
     this.uriComponentsBuilder =
